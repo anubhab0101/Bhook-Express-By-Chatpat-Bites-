@@ -1,0 +1,129 @@
+npm warn Unknown project config "auto-install-peers". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+npm warn Unknown project config "strict-peer-dependencies". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+$ pnpm run build && pnpm --filter @workspace/api-server run start
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+$ pnpm run typecheck && pnpm -r --if-present run build
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+$ pnpm run typecheck:libs && pnpm -r --filter "./artifacts/**" --filter "./scripts" --if-present run typecheck
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+$ tsc --build
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+Scope: 4 of 9 workspace projects
+artifacts/api-server typecheck$ tsc -p tsconfig.json --noEmit
+artifacts/mockup-sandbox typecheck$ tsc -p tsconfig.json --noEmit
+scripts typecheck$ tsc -p tsconfig.json --noEmit
+artifacts/restaurant typecheck$ tsc -p tsconfig.json --noEmit
+scripts typecheck: Done
+artifacts/api-server typecheck: Done
+artifacts/mockup-sandbox typecheck: Done
+artifacts/restaurant typecheck: Done
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+Scope: 8 of 9 workspace projects
+artifacts/mockup-sandbox build$ vite build
+artifacts/mockup-sandbox build: [36mvite v7.3.5 [32mbuilding client environment for production...[36m[39m
+artifacts/mockup-sandbox build: transforming...
+artifacts/mockup-sandbox build: [32m✓[39m 30 modules transformed.
+artifacts/mockup-sandbox build: rendering chunks...
+artifacts/mockup-sandbox build: computing gzip size...
+artifacts/mockup-sandbox build: [2mdist/[22m[32mindex.html                 [39m[1m[2m  4.42 kB[22m[1m[22m[2m │ gzip:  1.23 kB[22m
+artifacts/mockup-sandbox build: [2mdist/[22m[35massets/index-D3zZPnxY.css  [39m[1m[2m 88.21 kB[22m[1m[22m[2m │ gzip: 14.76 kB[22m
+artifacts/mockup-sandbox build: [2mdist/[22m[36massets/index-D4Ieq8L0.js   [39m[1m[2m187.72 kB[22m[1m[22m[2m │ gzip: 59.51 kB[22m
+artifacts/mockup-sandbox build: [32m✓ built in 1.38s[39m
+artifacts/mockup-sandbox build: Done
+artifacts/restaurant build$ vite build --config vite.config.ts
+artifacts/api-server build$ node ./build.mjs
+artifacts/api-server build:   dist\index.mjs                   1.4mb
+artifacts/api-server build:   dist\pino-worker.mjs           153.5kb
+artifacts/api-server build:   dist\pino-file.mjs             142.1kb
+artifacts/api-server build:   dist\pino-pretty.mjs           114.6kb
+artifacts/api-server build:   dist\thread-stream-worker.mjs    7.3kb
+artifacts/api-server build:   ...and 5 more output files...
+artifacts/api-server build: Done in 520ms
+artifacts/api-server build: Done
+artifacts/restaurant build: [36mvite v7.3.5 [32mbuilding client environment for production...[36m[39m
+artifacts/restaurant build: transforming...
+artifacts/restaurant build: [33msrc/components/ui/sonner.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.[39m
+artifacts/restaurant build: [32m✓[39m 2859 modules transformed.
+artifacts/restaurant build: rendering chunks...
+artifacts/restaurant build: computing gzip size...
+artifacts/restaurant build: [2mdist/public/[22m[32mindex.html                             [39m[1m[2m  1.41 kB[22m[1m[22m[2m │ gzip:   0.56 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[35massets/index-Qf6uObcQ.css              [39m[1m[2m127.03 kB[22m[1m[22m[2m │ gzip:  20.18 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/index-D8g6Vse-.js               [39m[1m[2m  0.10 kB[22m[1m[22m[2m │ gzip:   0.11 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/plus-2uQFng_F.js                [39m[1m[2m  0.15 kB[22m[1m[22m[2m │ gzip:   0.15 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/search-DG8qV5aS.js              [39m[1m[2m  0.17 kB[22m[1m[22m[2m │ gzip:   0.17 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/credit-card-BZtJLgXz.js         [39m[1m[2m  0.21 kB[22m[1m[22m[2m │ gzip:   0.19 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/map-pin-CdZrqIbL.js             [39m[1m[2m  0.26 kB[22m[1m[22m[2m │ gzip:   0.22 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/award-3G4PK29_.js               [39m[1m[2m  0.27 kB[22m[1m[22m[2m │ gzip:   0.22 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/users-Cr5sYB24.js               [39m[1m[2m  0.31 kB[22m[1m[22m[2m │ gzip:   0.23 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/trash-2-NGbsaUP0.js             [39m[1m[2m  0.33 kB[22m[1m[22m[2m │ gzip:   0.22 kB[22m
+artifacts/restaurant build: [33m
+artifacts/restaurant build: (!) Some chunks are larger than 500 kB after minification. Consider:
+artifacts/restaurant build: - Using dynamic import() to code-split the application
+artifacts/restaurant build: - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+artifacts/restaurant build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/shopping-bag-CyztIa6-.js        [39m[1m[2m  0.34 kB[22m[1m[22m[2m │ gzip:   0.24 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/gift-q8D-ou3X.js                [39m[1m[2m  0.36 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/menuService-DDko-Sy7.js         [39m[1m[2m  0.42 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/storageService-Bu_F-nNB.js      [39m[1m[2m  0.46 kB[22m[1m[22m[2m │ gzip:   0.32 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/star-BOIMPhlw.js                [39m[1m[2m  0.47 kB[22m[1m[22m[2m │ gzip:   0.29 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/utensils-crossed-D9R3duTJ.js    [39m[1m[2m  0.48 kB[22m[1m[22m[2m │ gzip:   0.32 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/settings-BXCAK7uX.js            [39m[1m[2m  0.48 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/qr-code-BR2K7D2J.js             [39m[1m[2m  0.65 kB[22m[1m[22m[2m │ gzip:   0.31 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/truck-B0Hd3WyV.js               [39m[1m[2m  0.68 kB[22m[1m[22m[2m │ gzip:   0.38 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/loyaltyService-Dl61o0Zn.js      [39m[1m[2m  0.80 kB[22m[1m[22m[2m │ gzip:   0.48 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/orderService-ORySyc3e.js        [39m[1m[2m  1.15 kB[22m[1m[22m[2m │ gzip:   0.50 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/OrdersPage-DzJ-ru6I.js          [39m[1m[2m  1.71 kB[22m[1m[22m[2m │ gzip:   0.84 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/RewardsManagement-DIsDmcDw.js   [39m[1m[2m  1.73 kB[22m[1m[22m[2m │ gzip:   0.79 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/AnalyticsPage-DzW8wTVe.js       [39m[1m[2m  1.76 kB[22m[1m[22m[2m │ gzip:   0.93 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/PaymentsPage-CEhWGOdZ.js        [39m[1m[2m  1.89 kB[22m[1m[22m[2m │ gzip:   0.82 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/OrderCard-rPhD2vE5.js           [39m[1m[2m  2.39 kB[22m[1m[22m[2m │ gzip:   0.86 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/PublicInfoPage-CTNEY9qP.js      [39m[1m[2m  2.43 kB[22m[1m[22m[2m │ gzip:   0.99 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/MenuCard-CDcJ4URI.js            [39m[1m[2m  2.49 kB[22m[1m[22m[2m │ gzip:   0.95 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/MenuPage-B0mfuXWW.js            [39m[1m[2m  2.79 kB[22m[1m[22m[2m │ gzip:   1.27 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/OrdersManagement-B37Lygz9.js    [39m[1m[2m  3.06 kB[22m[1m[22m[2m │ gzip:   1.28 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/CustomerManagement-DlrioWd2.js  [39m[1m[2m  3.09 kB[22m[1m[22m[2m │ gzip:   1.25 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/DeliveryPage-BvMEXEH5.js        [39m[1m[2m  3.15 kB[22m[1m[22m[2m │ gzip:   1.34 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/ProfilePage-7jgSmgf6.js         [39m[1m[2m  3.39 kB[22m[1m[22m[2m │ gzip:   1.45 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/KitchenPage-RPF4844B.js         [39m[1m[2m  3.39 kB[22m[1m[22m[2m │ gzip:   1.56 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/SetupWizard-C-9xrGZk.js         [39m[1m[2m  3.86 kB[22m[1m[22m[2m │ gzip:   1.44 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/index-FgzsBtfg.js               [39m[1m[2m  4.01 kB[22m[1m[22m[2m │ gzip:   1.90 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/SettingsPage-DB8066sL.js        [39m[1m[2m  4.45 kB[22m[1m[22m[2m │ gzip:   1.78 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/LoginPage-phfBzcSN.js           [39m[1m[2m  4.82 kB[22m[1m[22m[2m │ gzip:   1.90 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/LoyaltyPage-Cj7q09tR.js         [39m[1m[2m  5.45 kB[22m[1m[22m[2m │ gzip:   2.04 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/MenuManagement-CYN7Taku.js      [39m[1m[2m  8.04 kB[22m[1m[22m[2m │ gzip:   2.76 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/CartPage-BxrlTQeh.js            [39m[1m[2m  8.40 kB[22m[1m[22m[2m │ gzip:   2.86 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/LandingPage-6qB4KAvH.js         [39m[1m[2m  9.19 kB[22m[1m[22m[2m │ gzip:   2.94 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/QRManagement-CzbsgNRW.js        [39m[1m[2m 29.59 kB[22m[1m[22m[2m │ gzip:  11.48 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/AdminDashboard-BBE5Ikqk.js      [39m[1m[2m 33.70 kB[22m[1m[22m[2m │ gzip:   9.80 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/proxy-2QqF43R2.js               [39m[1m[2m122.66 kB[22m[1m[22m[2m │ gzip:  40.06 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/BarChart-dKtZ0yLo.js            [39m[1m[2m383.62 kB[22m[1m[22m[2m │ gzip: 105.93 kB[22m
+artifacts/restaurant build: [2mdist/public/[22m[36massets/index-BJDwe5Wq.js               [39m[1m[33m694.74 kB[39m[22m[2m │ gzip: 216.02 kB[22m
+artifacts/restaurant build: [32m✓ built in 14.54s[39m
+artifacts/restaurant build: Done
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+$ node --enable-source-maps ./dist/index.mjs
+C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\path-to-regexp@8.4.2\node_modules\path-to-regexp\src\index.ts:218
+          throw new PathError(`Missing parameter name at index ${index}`, str);
+                ^
+
+
+PathError [TypeError]: Missing parameter name at index 1: *; visit https://git.new/pathToRegexpError for info
+    at consumeUntil (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\path-to-regexp@8.4.2\node_modules\path-to-regexp\src\index.ts:218:17)
+    at parse (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\path-to-regexp@8.4.2\node_modules\path-to-regexp\src\index.ts:262:24)
+    at process (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\path-to-regexp@8.4.2\node_modules\path-to-regexp\src\index.ts:466:52)
+    at pathToRegexp (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\path-to-regexp@8.4.2\node_modules\path-to-regexp\src\index.ts:478:3)
+    at Object.match (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\path-to-regexp@8.4.2\node_modules\path-to-regexp\src\index.ts:416:28)
+    at matcher (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\router@2.2.0\node_modules\router\lib\layer.js:86:23)
+    at new Layer (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\router@2.2.0\node_modules\router\lib\layer.js:93:62)
+    at Function.route (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\router@2.2.0\node_modules\router\index.js:428:17)
+    at Function.route (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\express@5.2.1\node_modules\express\lib\application.js:257:22)
+    at Function.app3.<computed> (C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\node_modules\.pnpm\express@5.2.1\node_modules\express\lib\application.js:478:22) {
+  originalPath: '*'
+}
+
+Node.js v22.18.0
+C:\Users\wwwan\Downloads\Restaurant-Harmony\Restaurant-Harmony\artifacts\api-server:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @workspace/api-server@0.0.0 start: `node --enable-source-maps ./dist/index.mjs`
+Exit status 1
+[ELIFECYCLE] Command failed with exit code 1.
