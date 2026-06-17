@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
-    "start": "pnpm run build && pnpm --filter @workspace/api-server run start",
+    "render-build": "pnpm --filter @workspace/api-server run build && pnpm --filter ./artifacts/restaurant run build",
+    "start": "pnpm --filter @workspace/api-server run start",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
   },
