@@ -122,7 +122,6 @@ router.post("/payments/create-razorpay-order", async (req, res, next) => {
       razorpayOrderId: razorpayOrder.id,
       amount: razorpayOrder.amount,
       currency: razorpayOrder.currency,
-      priced,
     });
   } catch (err) {
     next(err);

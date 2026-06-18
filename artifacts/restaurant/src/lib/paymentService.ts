@@ -1,6 +1,14 @@
 import type { Order } from "@/types";
 
-type OnlineOrderPayload = Omit<Order, "id" | "orderNumber" | "createdAt" | "updatedAt" | "paymentStatus" | "paymentMethod">;
+type OnlineOrderPayload = Omit<
+  Order,
+  "id" | "orderNumber" | "createdAt" | "updatedAt" | "paymentStatus" | "paymentMethod" | "items"
+> & {
+  items: Array<{
+    menuItem: { id: string };
+    quantity: number;
+  }>;
+};
 
 declare global {
   interface Window {

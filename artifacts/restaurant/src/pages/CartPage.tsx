@@ -77,7 +77,10 @@ export default function CartPage() {
     return {
       type: orderType,
       status: "placed" as const,
-      items,
+      items: items.map(({ menuItem, quantity }) => ({
+        menuItem: { id: menuItem.id },
+        quantity,
+      })),
       subtotal,
       tax,
       deliveryCharge: orderType === "delivery" ? deliveryCharge : 0,
