@@ -107,8 +107,12 @@ export default function LoginPage() {
         className="w-full max-w-sm bg-card border border-border rounded-3xl shadow-xl p-8"
       >
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
-            <ChefHat className="w-7 h-7 text-amber-500" />
+          <div className="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center mx-auto mb-3 overflow-hidden">
+            {settings.logo ? (
+              <img src={settings.logo} alt="Logo" className="w-full h-full object-cover" />
+            ) : (
+              <ChefHat className="w-7 h-7 text-amber-500" />
+            )}
           </div>
           <h1 className="text-2xl font-extrabold text-foreground">{settings.name || "Restaurant"}</h1>
           <p className="text-muted-foreground text-sm mt-1">Sign in before ordering</p>

@@ -33,7 +33,11 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-            <ChefHat className="w-6 h-6" />
+            {settings.logo ? (
+              <img src={settings.logo} alt="Logo" className="w-8 h-8 object-contain rounded-md" />
+            ) : (
+              <ChefHat className="w-6 h-6" />
+            )}
             {settings.name || "Restaurant"}
           </Link>
 

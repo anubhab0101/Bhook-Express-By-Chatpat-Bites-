@@ -1,5 +1,5 @@
 const CACHE_NAME = "restaurant-harmony-v2";
-const STATIC_ASSETS = ["/favicon.svg", "/manifest.webmanifest"];
+const STATIC_ASSETS = ["/logo.png", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)));
