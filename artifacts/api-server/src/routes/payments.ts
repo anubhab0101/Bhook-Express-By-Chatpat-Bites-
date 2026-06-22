@@ -112,8 +112,15 @@ router.post("/payments/create-razorpay-order", async (req, res, next) => {
   try {
     const payload = req.body.orderPayload as OrderPayload;
     const priced = await priceOrder(payload);
+    const amountPaise = Math.round(priced.total * 100);
+
+    if (amountPaise < 100) {
+      res.status(400).json({ error: "Amount must be at least 100 paise" });
+      return;
+    }
+
     const razorpayOrder = await createRazorpayOrder(
-      priced.total * 100,
+      amountPaise,
       `order_${Date.now()}`,
     );
 
@@ -143,6 +150,11 @@ router.post("/payments/verify-and-create-order", async (req, res, next) => {
       razorpaySignature: string;
       paymentMethod?: string;
     };
+
+    if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
+      res.status(400).json({ error: "Missing required signature fields" });
+      return;
+    }
 
     if (!verifySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature)) {
       res.status(400).json({ error: "Invalid Razorpay signature" });
