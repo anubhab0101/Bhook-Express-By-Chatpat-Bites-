@@ -1,6 +1,6 @@
 {
-  "name": "Restaurant Harmony",
-  "short_name": "Harmony",
+  "name": "Bhookh Express By (Chatpata Bites)",
+  "short_name": "Bhookh Express",
   "description": "Restaurant ordering, kitchen, delivery, rewards, and admin platform.",
   "start_url": "/",
   "display": "standalone",

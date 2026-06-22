@@ -1,4 +1,4 @@
-# Restaurant Harmony Deployment Guide
+# Bhookh Express By (Chatpata Bites) Deployment Guide
 
 ## What Is Implemented
 

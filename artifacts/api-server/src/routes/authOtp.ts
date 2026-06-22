@@ -29,7 +29,7 @@ router.post("/auth/send-otp", async (req, res, next) => {
 
     const code = otp();
     otpStore.set(phone, { otp: code, name, expiresAt: Date.now() + 5 * 60 * 1000 });
-    const smsResult = await sendSms(phone, `${code} - you can use this for the Bhook Express.`);
+    const smsResult = await sendSms(phone, `${code} - you can use this for Bhookh Express By (Chatpata Bites).`);
     logger.info({
       phone: `${phone.slice(0, 3)}******${phone.slice(-2)}`,
       providerStatus: smsResult.providerStatus,

@@ -3,8 +3,8 @@ import type { RestaurantSettings } from "@/types";
 import { getItem, setItem, subscribeList } from "@/lib/rtdb";
 
 const DEFAULT_SETTINGS: RestaurantSettings = {
-  name: "My Restaurant",
-  logo: "",
+  name: "Bhookh Express By (Chatpata Bites)",
+  logo: "/logo.png",
   phone: "",
   email: "",
   address: "",

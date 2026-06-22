@@ -51,7 +51,7 @@ export default function SettingsPage() {
     {
       title: "Restaurant Info",
       fields: [
-        { key: "name", label: "Restaurant Name", placeholder: "My Restaurant" },
+        { key: "name", label: "Restaurant Name", placeholder: "Bhookh Express By (Chatpata Bites)" },
         { key: "tagline", label: "Tagline", placeholder: "Taste the Tradition" },
         { key: "phone", label: "Phone", placeholder: "+91 98765 43210" },
         { key: "email", label: "Email", placeholder: "info@restaurant.com" },
