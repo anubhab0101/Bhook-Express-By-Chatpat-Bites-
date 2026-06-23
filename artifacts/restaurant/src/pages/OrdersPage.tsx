@@ -9,41 +9,7 @@ import { onValue, ref } from "firebase/database";
 import { useAuth } from "@/context/AuthContext";
 import OrderCard from "@/components/OrderCard";
 import type { Order } from "@/types";
-
-function LiveTracker({ deliveryBoyId }: { deliveryBoyId: string }) {
-  const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
-
-  useEffect(() => {
-    if (!deliveryBoyId) return;
-    const locRef = ref(db, `delivery_locations/${deliveryBoyId}`);
-    const unsub = onValue(locRef, (snap) => {
-      if (snap.exists()) setLocation(snap.val());
-    });
-    return () => unsub();
-  }, [deliveryBoyId]);
-
-  if (!location) return <div className="text-sm text-muted-foreground animate-pulse p-3 bg-muted rounded-xl flex items-center gap-2"><MapPin className="w-4 h-4" /> Locating Delivery Partner...</div>;
-
-  const gmapsLink = `https://maps.google.com/?q=${location.lat},${location.lng}`;
-
-  return (
-    <div className="bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900 rounded-xl p-3 flex items-center justify-between">
-      <div className="flex items-center gap-3 text-orange-800 dark:text-orange-300">
-        <div className="w-10 h-10 rounded-full bg-orange-200 dark:bg-orange-900 flex items-center justify-center">
-          <MapPin className="w-5 h-5 animate-bounce" />
-        </div>
-        <div>
-          <p className="text-sm font-bold">Arriving Soon</p>
-          <p className="text-xs opacity-80">Track partner's live position</p>
-        </div>
-      </div>
-      <a href={gmapsLink} target="_blank" rel="noopener noreferrer" className="bg-orange-600 hover:bg-orange-700 transition-colors text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm">
-        View on Map
-      </a>
-    </div>
-  );
-}
-
+import LiveTracker from "@/components/LiveTracker";
 export default function OrdersPage() {
   const { user } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -96,7 +62,7 @@ export default function OrdersPage() {
               <div key={o.id} className="space-y-3">
                 <OrderCard order={o} />
                 {o.status === "out_for_delivery" && o.deliveryBoyId && (
-                  <LiveTracker deliveryBoyId={o.deliveryBoyId} />
+                  <LiveTracker order={o} />
                 )}
                 {o.status === "delivered" && (
                   <button

@@ -4,16 +4,19 @@ import { Truck, MapPin, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { subscribeToDeliveryOrders, updateOrderStatus } from "@/lib/orderService";
 import { useAuth } from "@/context/AuthContext";
+import { useSettings } from "@/context/SettingsContext";
 import OrderCard from "@/components/OrderCard";
+import LiveTracker from "@/components/LiveTracker";
 import type { Order, OrderStatus } from "@/types";
 
 const DELIVERY_ACTIONS: Record<string, { label: string; status: OrderStatus }[]> = {
-  ready:            [{ label: "Picked Up", status: "out_for_delivery" }],
-  out_for_delivery: [{ label: "Delivered", status: "delivered" }],
+  ready:            [{ label: "Picked Up", status: "out_for_delivery" as OrderStatus }],
+  out_for_delivery: [{ label: "Complete Delivery", status: "completed" as OrderStatus }],
 };
 
 export default function DeliveryPage() {
   const { user, isDelivery } = useAuth();
+  const { settings } = useSettings();
   const [, navigate] = useLocation();
   const [orders, setOrders] = useState<Order[]>([]);
 
@@ -89,9 +92,7 @@ export default function DeliveryPage() {
                           {o.deliveryAddress && (
                             <div className="mt-2 flex gap-2 flex-wrap">
                               <a
-                                href={`https://maps.google.com/?q=${encodeURIComponent(
-                                  import.meta.env.RESTAURANT_LAT + "," + import.meta.env.RESTAURANT_LNG
-                                )}`}
+                                href={`https://maps.google.com/?q=${encodeURIComponent(settings?.address || "Bhookh Express By Chatpata Bites")}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-1 text-xs bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-3 py-1.5 rounded-full font-medium hover:bg-orange-100 transition-colors"
@@ -100,7 +101,11 @@ export default function DeliveryPage() {
                                 Restaurant (Pickup)
                               </a>
                               <a
-                                href={`https://maps.google.com/?q=${encodeURIComponent(o.deliveryAddress.address + " " + o.deliveryAddress.pincode)}`}
+                                href={`https://maps.google.com/?q=${
+                                  o.deliveryAddress.lat && o.deliveryAddress.lng 
+                                  ? `${o.deliveryAddress.lat},${o.deliveryAddress.lng}`
+                                  : encodeURIComponent(o.deliveryAddress.address + " " + o.deliveryAddress.pincode)
+                                }`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-1 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-full font-medium hover:bg-blue-100 transition-colors"
@@ -108,7 +113,7 @@ export default function DeliveryPage() {
                                 <MapPin className="w-3 h-3" />
                                 Drop Location
                               </a>
-                              {o.customerPhone && (
+                              {o.customerPhone && o.status === "out_for_delivery" && (
                                 <a
                                   href={`tel:${o.customerPhone}`}
                                   className="flex items-center gap-1 text-xs bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1.5 rounded-full font-medium hover:bg-green-100 transition-colors"
@@ -117,6 +122,11 @@ export default function DeliveryPage() {
                                   Call Customer
                                 </a>
                               )}
+                            </div>
+                          )}
+                          {o.status === "out_for_delivery" && (
+                            <div className="mt-3">
+                              <LiveTracker order={o} />
                             </div>
                           )}
                         </div>

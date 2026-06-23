@@ -1,4 +1,5 @@
 import { formatCurrency, formatDate, statusColor, statusLabel } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
 import type { Order, OrderStatus } from "@/types";
 
 interface OrderCardProps {
@@ -9,6 +10,8 @@ interface OrderCardProps {
 }
 
 export default function OrderCard({ order, actions, onAction }: OrderCardProps) {
+  const { isAdmin } = useAuth();
+
   return (
     <div className="bg-card border border-border rounded-2xl p-4 shadow-sm space-y-3">
       <div className="flex items-start justify-between gap-2">
@@ -47,7 +50,10 @@ export default function OrderCard({ order, actions, onAction }: OrderCardProps) 
         <div className="bg-muted rounded-lg p-2 text-xs text-muted-foreground">
           <p className="font-medium text-foreground">{order.deliveryAddress.address}</p>
           {order.deliveryAddress.landmark && <p>{order.deliveryAddress.landmark}</p>}
-          <p>{order.deliveryAddress.pincode} · {order.customerPhone}</p>
+          <p>
+            {order.deliveryAddress.pincode}
+            {isAdmin && <span className="ml-1 font-semibold text-primary">· Ph: {order.customerPhone}</span>}
+          </p>
         </div>
       )}
 

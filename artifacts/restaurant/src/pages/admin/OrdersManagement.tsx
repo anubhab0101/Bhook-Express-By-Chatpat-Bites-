@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import { subscribeToOrders, updateOrderStatus } from "@/lib/orderService";
 import { useAuth } from "@/context/AuthContext";
 import OrderCard from "@/components/OrderCard";
+import LiveTracker from "@/components/LiveTracker";
 import { formatCurrency, statusLabel } from "@/lib/utils";
 import type { Order, OrderStatus } from "@/types";
 
@@ -79,22 +80,25 @@ export default function OrdersManagement() {
           ))}
         </div>
 
-        {/* Orders */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           {filtered.map((o) => (
-            <OrderCard
-              key={o.id}
-              order={o}
-              actions={
-                o.status === "placed" ? [{ label: "Accept", status: "accepted" as OrderStatus }, { label: "Cancel", status: "cancelled" as OrderStatus }] :
-                o.status === "accepted" ? [{ label: "Preparing", status: "preparing" as OrderStatus }] :
-                o.status === "preparing" ? [{ label: "Ready", status: "ready" as OrderStatus }] :
-                o.status === "ready" && o.type !== "delivery" ? [{ label: "Complete", status: "completed" as OrderStatus }] :
-                o.status === "out_for_delivery" ? [{ label: "Mark Delivered", status: "delivered" as OrderStatus }] :
-                []
-              }
-              onAction={handleAction}
-            />
+            <div key={o.id} className="space-y-2">
+              <OrderCard
+                order={o}
+                actions={
+                  o.status === "placed" ? [{ label: "Accept", status: "accepted" as OrderStatus }, { label: "Cancel", status: "cancelled" as OrderStatus }] :
+                  o.status === "accepted" ? [{ label: "Preparing", status: "preparing" as OrderStatus }] :
+                  o.status === "preparing" ? [{ label: "Ready", status: "ready" as OrderStatus }] :
+                  o.status === "ready" && o.type !== "delivery" ? [{ label: "Complete", status: "completed" as OrderStatus }] :
+                  o.status === "out_for_delivery" ? [{ label: "Mark Delivered", status: "delivered" as OrderStatus }] :
+                  []
+                }
+                onAction={handleAction}
+              />
+              {o.status === "out_for_delivery" && (
+                <LiveTracker order={o} />
+              )}
+            </div>
           ))}
           {filtered.length === 0 && (
             <p className="text-center py-16 text-muted-foreground">No orders found</p>
