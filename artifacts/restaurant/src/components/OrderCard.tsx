@@ -21,7 +21,11 @@ export default function OrderCard({ order, actions, onAction }: OrderCardProps) 
           <span className={`text-xs font-semibold px-2 py-1 rounded-full ${statusColor(order.status)}`}>
             {statusLabel(order.status)}
           </span>
-          <span className="text-xs text-muted-foreground capitalize">{order.type.replace("_", " ")}</span>
+          <span className={`text-xs font-semibold px-2 py-1 rounded-md ${
+            order.type === 'delivery' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+          } capitalize`}>
+            {order.type.replace("_", " ")}
+          </span>
         </div>
       </div>
 

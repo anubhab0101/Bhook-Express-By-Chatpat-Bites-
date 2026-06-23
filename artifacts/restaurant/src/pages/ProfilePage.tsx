@@ -1,16 +1,57 @@
+import { useState } from "react";
 import { useLocation } from "wouter";
-import { motion } from "framer-motion";
-import { User, LogOut, Star, ShoppingBag, Crown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { User, LogOut, Star, ShoppingBag, Crown, MapPin, Plus, Trash2, Edit2, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { formatCurrency } from "@/lib/utils";
+import { updateItem, deleteItem, nowIso } from "@/lib/rtdb";
+import type { SavedAddress } from "@/types";
 
 export default function ProfilePage() {
   const { user, signOut, isAdmin, isKitchen, isDelivery } = useAuth();
   const [, navigate] = useLocation();
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [addressForm, setAddressForm] = useState<Partial<SavedAddress>>({});
 
   if (!user) {
     navigate("/login");
     return null;
+  }
+
+  const savedAddressesList = Object.values(user.savedAddresses || {});
+
+  async function saveAddress() {
+    if (!addressForm.label || !addressForm.address || !addressForm.pincode) {
+      alert("Please fill Label, Address and Pincode");
+      return;
+    }
+    const id = editingAddressId || `addr_${Date.now()}`;
+    const payload = {
+      id,
+      label: addressForm.label,
+      name: addressForm.name || user?.name || "",
+      phone: addressForm.phone || user?.phone || "",
+      address: addressForm.address,
+      landmark: addressForm.landmark || "",
+      pincode: addressForm.pincode,
+    };
+    await updateItem(`users/${user?.uid}/savedAddresses/${id}`, payload);
+    setShowAddressForm(false);
+    setEditingAddressId(null);
+    setAddressForm({});
+  }
+
+  async function removeAddress(id: string) {
+    if (confirm("Delete this address?")) {
+      await deleteItem(`users/${user?.uid}/savedAddresses/${id}`);
+    }
+  }
+
+  function editAddress(addr: SavedAddress) {
+    setAddressForm(addr);
+    setEditingAddressId(addr.id);
+    setShowAddressForm(true);
   }
 
   const roleLabel: Record<string, string> = {
@@ -58,6 +99,63 @@ export default function ProfilePage() {
               <p className="text-xs text-muted-foreground">{s.label}</p>
             </div>
           ))}
+        </motion.div>
+
+        {/* Address Book */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl overflow-hidden p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-foreground flex items-center gap-2"><MapPin className="w-5 h-5 text-primary" /> Saved Addresses</h2>
+            {!showAddressForm && (
+              <button onClick={() => { setAddressForm({ label: "Home", name: user.name, phone: user.phone }); setEditingAddressId(null); setShowAddressForm(true); }} className="text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-lg font-semibold hover:bg-primary/20 flex items-center gap-1">
+                <Plus className="w-4 h-4" /> Add New
+              </button>
+            )}
+          </div>
+
+          <AnimatePresence>
+            {showAddressForm && (
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mb-6 bg-muted/50 p-4 rounded-xl space-y-3 overflow-hidden">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-semibold text-sm">{editingAddressId ? "Edit Address" : "Add New Address"}</h3>
+                  <button onClick={() => setShowAddressForm(false)} className="p-1 hover:bg-muted rounded-md"><X className="w-4 h-4 text-muted-foreground" /></button>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <input type="text" placeholder="Label (Home, Office)" value={addressForm.label || ""} onChange={e => setAddressForm({ ...addressForm, label: e.target.value })} className="w-full text-sm border border-border rounded-lg px-3 py-2 bg-background focus:outline-none focus:border-primary" />
+                  <input type="text" placeholder="Pincode" value={addressForm.pincode || ""} onChange={e => setAddressForm({ ...addressForm, pincode: e.target.value })} className="w-full text-sm border border-border rounded-lg px-3 py-2 bg-background focus:outline-none focus:border-primary" />
+                </div>
+                <input type="text" placeholder="Complete Address" value={addressForm.address || ""} onChange={e => setAddressForm({ ...addressForm, address: e.target.value })} className="w-full text-sm border border-border rounded-lg px-3 py-2 bg-background focus:outline-none focus:border-primary" />
+                <input type="text" placeholder="Landmark (Optional)" value={addressForm.landmark || ""} onChange={e => setAddressForm({ ...addressForm, landmark: e.target.value })} className="w-full text-sm border border-border rounded-lg px-3 py-2 bg-background focus:outline-none focus:border-primary" />
+                <div className="grid grid-cols-2 gap-3">
+                  <input type="text" placeholder="Receiver Name" value={addressForm.name || ""} onChange={e => setAddressForm({ ...addressForm, name: e.target.value })} className="w-full text-sm border border-border rounded-lg px-3 py-2 bg-background focus:outline-none focus:border-primary" />
+                  <input type="tel" placeholder="Receiver Phone" value={addressForm.phone || ""} onChange={e => setAddressForm({ ...addressForm, phone: e.target.value })} className="w-full text-sm border border-border rounded-lg px-3 py-2 bg-background focus:outline-none focus:border-primary" />
+                </div>
+                <button onClick={saveAddress} className="w-full bg-primary text-primary-foreground py-2 rounded-lg font-bold text-sm mt-2">Save Address</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {!showAddressForm && savedAddressesList.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-4">No saved addresses yet.</p>
+          )}
+
+          <div className="space-y-3">
+            {!showAddressForm && savedAddressesList.map(addr => (
+              <div key={addr.id} className="border border-border rounded-xl p-3 flex items-start justify-between hover:bg-muted/30 transition-colors">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="bg-muted px-2 py-0.5 rounded text-xs font-bold text-foreground">{addr.label}</span>
+                    <span className="text-sm font-semibold">{addr.name}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{addr.address}, {addr.landmark}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Ph: {addr.phone} • Pin: {addr.pincode}</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => editAddress(addr)} className="p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg"><Edit2 className="w-4 h-4" /></button>
+                  <button onClick={() => removeAddress(addr.id)} className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"><Trash2 className="w-4 h-4" /></button>
+                </div>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         {/* Nav links */}

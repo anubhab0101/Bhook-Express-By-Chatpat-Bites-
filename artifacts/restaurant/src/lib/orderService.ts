@@ -23,8 +23,8 @@ export async function createOrder(data: Omit<Order, "id" | "orderNumber" | "crea
   });
 }
 
-export async function updateOrderStatus(id: string, status: OrderStatus, customerId?: string) {
-  await updateItem(`orders/${id}`, { status, updatedAt: nowIso() });
+export async function updateOrderStatus(id: string, status: OrderStatus, customerId?: string, extraData?: any) {
+  await updateItem(`orders/${id}`, { status, updatedAt: nowIso(), ...(extraData || {}) });
   if (status === "completed" && customerId) {
     await awardLoyaltyStamp(customerId, id);
   }

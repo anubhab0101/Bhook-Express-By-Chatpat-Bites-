@@ -22,7 +22,20 @@ export interface User {
   rewardAvailable: boolean;
   totalOrders: number;
   totalSpent: number;
+  savedAddresses?: Record<string, SavedAddress>;
   createdAt: string;
+}
+
+export interface SavedAddress {
+  id: string;
+  label: string; // e.g. "Home", "Office"
+  name: string;
+  phone: string;
+  address: string;
+  landmark: string;
+  pincode: string;
+  lat?: number;
+  lng?: number;
 }
 
 export interface MenuItem {
@@ -87,6 +100,7 @@ export interface Order {
   customerPhone: string;
   tableNumber?: string;
   deliveryAddress?: DeliveryAddress;
+  deliveryBoyId?: string;
   paymentId?: string;
   transactionId?: string;
   paymentStatus: "pending" | "paid" | "failed";

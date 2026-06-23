@@ -65,9 +65,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function syncUser(fbUser: import("firebase/auth").User) {
     const existing = await getItem<User>(`users/${fbUser.uid}`);
 
+    const phoneFromAnywhere = fbUser.phoneNumber || existing?.phone || "";
     let role: UserRole = "customer";
-    if (fbUser.email === ADMIN_EMAIL || fbUser.phoneNumber === `+91${ADMIN_PHONE}`) {
+    if (fbUser.email === ADMIN_EMAIL || phoneFromAnywhere === `+91${ADMIN_PHONE}`) {
       role = "admin";
+    } else if (phoneFromAnywhere) {
+      // Check if phone number is registered as delivery staff
+      try {
+        const staffList = await getItem<Record<string, boolean>>("delivery_staff");
+        if (staffList) {
+          // Check formats with and without +91
+          const phoneWithoutCode = phoneFromAnywhere.replace("+91", "");
+          if (staffList[phoneFromAnywhere] || staffList[phoneWithoutCode]) {
+            role = "delivery";
+          }
+        }
+      } catch (e) {
+        console.warn("Could not check delivery staff role", e);
+      }
     }
 
     if (!existing) {
@@ -92,6 +107,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           await updateItem(`users/${fbUser.uid}`, { role: "admin" });
           data.role = "admin";
         }
+      } else if (role === "delivery" && data.role !== "delivery") {
+        // Upgrade existing customer to delivery if they were added by admin
+        await updateItem(`users/${fbUser.uid}`, { role: "delivery" });
+        data.role = "delivery";
       }
       setUser({ ...data, uid: fbUser.uid });
     }

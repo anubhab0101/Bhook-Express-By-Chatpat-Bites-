@@ -24,6 +24,35 @@ export default function SettingsPage() {
     setForm({ ...settings });
   }, [settings]);
 
+  const [deliveryStaffPhones, setDeliveryStaffPhones] = useState<string[]>([]);
+  const [newStaffPhone, setNewStaffPhone] = useState("");
+
+  useEffect(() => {
+    async function loadStaff() {
+      const data = await import("@/lib/rtdb").then(m => m.getItem<Record<string, boolean>>("delivery_staff"));
+      if (data) setDeliveryStaffPhones(Object.keys(data).filter(k => data[k]));
+    }
+    if (isAdmin) loadStaff();
+  }, [isAdmin]);
+
+  async function handleAddStaff() {
+    if (!newStaffPhone || newStaffPhone.length < 10) return;
+    const phone = newStaffPhone.replace(/\D/g, "").slice(-10);
+    if (deliveryStaffPhones.includes(phone)) return;
+    const updated = [...deliveryStaffPhones, phone];
+    setDeliveryStaffPhones(updated);
+    setNewStaffPhone("");
+    const dbObj = updated.reduce((acc, curr) => ({ ...acc, [curr]: true }), {});
+    await import("@/lib/rtdb").then(m => m.setItem("delivery_staff", dbObj));
+  }
+
+  async function handleRemoveStaff(phone: string) {
+    const updated = deliveryStaffPhones.filter(p => p !== phone);
+    setDeliveryStaffPhones(updated);
+    const dbObj = updated.reduce((acc, curr) => ({ ...acc, [curr]: true }), {});
+    await import("@/lib/rtdb").then(m => m.setItem("delivery_staff", dbObj));
+  }
+
   async function handleSave() {
     setSaving(true);
     try {
@@ -135,6 +164,36 @@ export default function SettingsPage() {
             </div>
           </div>
         ))}
+
+        {/* Manage Delivery Staff */}
+        <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
+          <h2 className="font-bold text-foreground">Manage Delivery Staff</h2>
+          <p className="text-sm text-muted-foreground">Add phone numbers (10 digits). They will automatically get the Delivery role upon logging in.</p>
+          <div className="flex gap-3">
+            <div className="flex bg-background border border-border rounded-xl px-3 py-2 text-sm flex-1">
+              <span className="text-muted-foreground mr-2">+91</span>
+              <input
+                type="tel"
+                placeholder="9876543210"
+                value={newStaffPhone}
+                onChange={(e) => setNewStaffPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                className="bg-transparent border-none outline-none flex-1"
+              />
+            </div>
+            <button onClick={handleAddStaff} className="bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-bold">
+              Add
+            </button>
+          </div>
+          <div className="space-y-2 mt-4">
+            {deliveryStaffPhones.map(phone => (
+              <div key={phone} className="flex items-center justify-between bg-muted/50 px-4 py-2 rounded-lg border border-border text-sm">
+                <span>+91 {phone}</span>
+                <button onClick={() => handleRemoveStaff(phone)} className="text-destructive font-bold text-xs">Remove</button>
+              </div>
+            ))}
+            {deliveryStaffPhones.length === 0 && <p className="text-sm text-muted-foreground italic">No delivery staff added yet.</p>}
+          </div>
+        </div>
 
         <button
           onClick={handleSave}

@@ -22,8 +22,12 @@ function parseEnvLine(line: string) {
 }
 
 export function loadLocalEnv() {
-  const envPath = path.resolve(process.cwd(), ".env");
-  if (!fs.existsSync(envPath)) return;
+  let envPath = path.resolve(process.cwd(), ".env");
+  if (!fs.existsSync(envPath)) {
+    // Also try looking two directories up in case it's run from artifacts/api-server
+    envPath = path.resolve(process.cwd(), "../../.env");
+    if (!fs.existsSync(envPath)) return;
+  }
 
   const lines = fs.readFileSync(envPath, "utf8").split(/\r?\n/);
   for (const line of lines) {

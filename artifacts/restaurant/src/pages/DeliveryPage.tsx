@@ -24,9 +24,29 @@ export default function DeliveryPage() {
     return unsub;
   }, [user, isDelivery]);
 
+  // Geolocation tracking
+  useEffect(() => {
+    if (!user || !isDelivery) return;
+    const activeDeliveries = orders.filter(o => o.status === "out_for_delivery" && o.deliveryBoyId === user.uid);
+    if (activeDeliveries.length > 0) {
+      const watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          import("@/lib/rtdb").then(m => m.setItem(`delivery_locations/${user.uid}`, { lat: latitude, lng: longitude, updatedAt: m.nowIso() }));
+        },
+        (err) => console.error("Geolocation error:", err),
+        { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+      );
+      return () => navigator.geolocation.clearWatch(watchId);
+    }
+    return;
+  }, [orders, user, isDelivery]);
+
   async function handleAction(orderId: string, status: OrderStatus) {
     const o = orders.find((x) => x.id === orderId);
-    await updateOrderStatus(orderId, status, o?.customerId);
+    const extraData: any = {};
+    if (status === "out_for_delivery") extraData.deliveryBoyId = user?.uid;
+    await updateOrderStatus(orderId, status, o?.customerId, extraData);
   }
 
   return (
@@ -45,9 +65,9 @@ export default function DeliveryPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
             { label: "Ready for Pickup", status: "ready" as OrderStatus, color: "border-green-400" },
-            { label: "Out for Delivery", status: "out_for_delivery" as OrderStatus, color: "border-purple-400" },
+            { label: "My Deliveries (Out)", status: "out_for_delivery" as OrderStatus, color: "border-purple-400" },
           ].map((col) => {
-            const colOrders = orders.filter((o) => o.status === col.status);
+            const colOrders = orders.filter((o) => o.status === col.status && (col.status !== "out_for_delivery" || o.deliveryBoyId === user?.uid));
             return (
               <div key={col.label} className={`bg-card border-t-4 ${col.color} rounded-2xl p-4`}>
                 <div className="flex items-center justify-between mb-4">
@@ -69,13 +89,24 @@ export default function DeliveryPage() {
                           {o.deliveryAddress && (
                             <div className="mt-2 flex gap-2 flex-wrap">
                               <a
+                                href={`https://maps.google.com/?q=${encodeURIComponent(
+                                  import.meta.env.RESTAURANT_LAT + "," + import.meta.env.RESTAURANT_LNG
+                                )}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 text-xs bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-3 py-1.5 rounded-full font-medium hover:bg-orange-100 transition-colors"
+                              >
+                                <MapPin className="w-3 h-3" />
+                                Restaurant (Pickup)
+                              </a>
+                              <a
                                 href={`https://maps.google.com/?q=${encodeURIComponent(o.deliveryAddress.address + " " + o.deliveryAddress.pincode)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-1 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-full font-medium hover:bg-blue-100 transition-colors"
                               >
                                 <MapPin className="w-3 h-3" />
-                                Open Map
+                                Drop Location
                               </a>
                               {o.customerPhone && (
                                 <a

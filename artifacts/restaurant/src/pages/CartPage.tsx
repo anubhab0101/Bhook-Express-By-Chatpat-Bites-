@@ -181,6 +181,27 @@ export default function CartPage() {
                 <MapPin className="w-4 h-4" />
                 <span className="text-sm font-medium">Delivery Address</span>
               </div>
+              {user?.savedAddresses && Object.keys(user.savedAddresses).length > 0 && (
+                <div className="flex gap-2 overflow-x-auto pb-2 mb-2 hide-scrollbar">
+                  {Object.values(user.savedAddresses).map((addr) => (
+                    <button
+                      key={addr.id}
+                      type="button"
+                      onClick={() => {
+                        setDelivery(addr as any);
+                        setDistanceKm(null);
+                        if (addr.address && addr.pincode) {
+                          // Trigger distance calc naturally based on address
+                        }
+                      }}
+                      className="flex-shrink-0 px-4 py-2 rounded-xl border border-border text-sm font-medium hover:border-primary/50 transition-colors bg-muted/20 text-left"
+                    >
+                      <span className="block font-bold text-primary">{addr.label}</span>
+                      <span className="text-xs text-muted-foreground truncate w-32 inline-block">{addr.address}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
               {(["name", "phone", "address", "landmark", "pincode"] as (keyof DeliveryAddress)[]).map((f) => (
                 <input key={f} type={f === "phone" ? "tel" : "text"} placeholder={f.charAt(0).toUpperCase() + f.slice(1)} value={(delivery[f] as string) || ""} onChange={(e) => setDelivery((d) => ({ ...d, [f]: e.target.value }))} className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
               ))}

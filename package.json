@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "dev": "pnpm run build && pnpm run start",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "render-build": "pnpm --filter @workspace/api-server run build && pnpm --filter ./artifacts/restaurant run build",
     "start": "pnpm --filter @workspace/api-server run start",
