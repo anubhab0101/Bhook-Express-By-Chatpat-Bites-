@@ -86,10 +86,11 @@ export default function OrdersManagement() {
               key={o.id}
               order={o}
               actions={
-                o.status === "placed" ? [{ label: "Accept", status: "accepted" }, { label: "Cancel", status: "cancelled" }] :
-                o.status === "accepted" ? [{ label: "Preparing", status: "preparing" }] :
-                o.status === "preparing" ? [{ label: "Ready", status: "ready" }] :
-                o.status === "ready" ? [{ label: "Complete", status: "completed" }] :
+                o.status === "placed" ? [{ label: "Accept", status: "accepted" as OrderStatus }, { label: "Cancel", status: "cancelled" as OrderStatus }] :
+                o.status === "accepted" ? [{ label: "Preparing", status: "preparing" as OrderStatus }] :
+                o.status === "preparing" ? [{ label: "Ready", status: "ready" as OrderStatus }] :
+                o.status === "ready" && o.type !== "delivery" ? [{ label: "Complete", status: "completed" as OrderStatus }] :
+                o.status === "out_for_delivery" ? [{ label: "Mark Delivered", status: "delivered" as OrderStatus }] :
                 []
               }
               onAction={handleAction}

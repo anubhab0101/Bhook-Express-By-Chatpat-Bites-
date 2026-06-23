@@ -7,16 +7,13 @@ import { useAuth } from "@/context/AuthContext";
 import OrderCard from "@/components/OrderCard";
 import type { Order, OrderStatus } from "@/types";
 
-const ACTIONS: Record<OrderStatus, { label: string; status: OrderStatus }[]> = {
-  placed:   [{ label: "Accept", status: "accepted" }, { label: "Cancel", status: "cancelled" }],
-  accepted: [{ label: "Start Preparing", status: "preparing" }],
-  preparing:[{ label: "Mark Ready", status: "ready" }],
-  ready:    [{ label: "Complete", status: "completed" }],
-  out_for_delivery: [],
-  delivered: [],
-  completed: [],
-  cancelled: [],
-};
+function getActionsForOrder(order: Order) {
+  if (order.status === "placed") return [{ label: "Accept", status: "accepted" as OrderStatus }, { label: "Cancel", status: "cancelled" as OrderStatus }];
+  if (order.status === "accepted") return [{ label: "Start Preparing", status: "preparing" as OrderStatus }];
+  if (order.status === "preparing") return [{ label: "Mark Ready", status: "ready" as OrderStatus }];
+  if (order.status === "ready" && order.type !== "delivery") return [{ label: "Complete", status: "completed" as OrderStatus }];
+  return [];
+}
 
 export default function KitchenPage() {
   const { user, isKitchen } = useAuth();
@@ -102,7 +99,7 @@ export default function KitchenPage() {
                       >
                         <OrderCard
                           order={o}
-                          actions={ACTIONS[o.status]}
+                          actions={getActionsForOrder(o)}
                           onAction={handleAction}
                         />
                       </motion.div>
