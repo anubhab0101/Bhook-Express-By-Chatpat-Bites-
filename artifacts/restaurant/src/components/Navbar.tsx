@@ -33,13 +33,15 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg sm:text-xl text-primary min-w-0">
             {settings.logo ? (
-              <img src={settings.logo} alt="Logo" className="w-8 h-8 object-contain rounded-md" />
+              <img src={settings.logo} alt="Logo" className="w-8 h-8 object-contain rounded-md shrink-0" />
             ) : (
-              <ChefHat className="w-6 h-6" />
+              <ChefHat className="w-6 h-6 shrink-0" />
             )}
-            {settings.name || "Restaurant"}
+            <span className="truncate">
+              {settings.name || "Restaurant"}
+            </span>
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
@@ -57,7 +59,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 shrink-0 ml-4">
             <button onClick={toggleDark} className="p-2 rounded-lg hover:bg-muted transition-colors">
               {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
