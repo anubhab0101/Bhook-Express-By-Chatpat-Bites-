@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { useSettings } from "@/context/SettingsContext";
 import { cn } from "@/lib/utils";
+import GlobalNotification from "./GlobalNotification";
 
 export default function Navbar() {
   const { user, signOut, isAdmin, isKitchen, isDelivery } = useAuth();
@@ -110,6 +111,7 @@ export default function Navbar() {
           </div>
         )}
       </div>
+      <GlobalNotification />
     </nav>
   );
 }

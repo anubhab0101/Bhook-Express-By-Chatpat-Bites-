@@ -21,7 +21,6 @@ export default function KitchenPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [newCount, setNewCount] = useState(0);
   const prevIds = useRef<Set<string>>(new Set());
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (!user) { navigate("/login"); return; }
@@ -30,7 +29,6 @@ export default function KitchenPage() {
       const newOnes = incoming.filter((o) => !prevIds.current.has(o.id));
       if (newOnes.length > 0) {
         setNewCount((n) => n + newOnes.length);
-        try { audioRef.current?.play(); } catch {}
         newOnes.forEach((o) => prevIds.current.add(o.id));
       }
       incoming.forEach((o) => prevIds.current.add(o.id));
@@ -53,8 +51,6 @@ export default function KitchenPage() {
 
   return (
     <div className="min-h-screen bg-background pb-8">
-      <audio ref={audioRef} src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto" />
-
       <div className="bg-gradient-to-r from-orange-700 to-amber-700 text-white py-6 px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
