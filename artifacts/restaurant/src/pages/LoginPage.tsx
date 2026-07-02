@@ -118,7 +118,7 @@ export default function LoginPage() {
             </div>
             <DialogTitle>Login help</DialogTitle>
             <DialogDescription className="leading-relaxed">
-              Agar number login kaam nahi kar raha hai ya OTP nahi aa raha hai, to aap Gmail/Email se login kar sakte hain.
+              If phone number login is not working or you are not receiving the OTP, you can sign in with Gmail or Email instead.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
