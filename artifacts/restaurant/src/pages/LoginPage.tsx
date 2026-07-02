@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { ChefHat } from "lucide-react";
+import { ChefHat, Info } from "lucide-react";
 import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { useSettings } from "@/context/SettingsContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function LoginPage() {
   const { user, signInWithGoogle, signInWithEmail } = useAuth();
@@ -19,6 +27,7 @@ export default function LoginPage() {
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showLoginHelp, setShowLoginHelp] = useState(true);
 
   useEffect(() => {
     if (user) navigate("/menu");
@@ -101,6 +110,28 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 px-4">
+      <Dialog open={showLoginHelp} onOpenChange={setShowLoginHelp}>
+        <DialogContent className="max-w-[calc(100vw-2rem)] rounded-2xl sm:max-w-sm">
+          <DialogHeader className="text-left">
+            <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-amber-500/10 text-amber-600">
+              <Info className="h-5 w-5" />
+            </div>
+            <DialogTitle>Login help</DialogTitle>
+            <DialogDescription className="leading-relaxed">
+              Agar number login kaam nahi kar raha hai ya OTP nahi aa raha hai, to aap Gmail/Email se login kar sakte hain.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button
+              onClick={() => setShowLoginHelp(false)}
+              className="w-full rounded-xl bg-amber-500 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-amber-600"
+            >
+              OK, Got it
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
