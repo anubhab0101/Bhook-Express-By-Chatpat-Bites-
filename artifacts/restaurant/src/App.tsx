@@ -34,16 +34,14 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
 });
 
-const MAX_LOADING_MS = 1500;
+const MAX_LOADING_MS = 2500;
 
 function AppRoutes() {
   const { user } = useAuth();
 
   return (
     <Switch>
-      <Route path="/">
-        {() => user ? <MenuPage /> : <LoginPage />}
-      </Route>
+      <Route path="/" component={LandingPage} />
       <Route path="/menu" component={MenuPage} />
       <Route path="/about" component={PublicInfoPage} />
       <Route path="/contact" component={PublicInfoPage} />

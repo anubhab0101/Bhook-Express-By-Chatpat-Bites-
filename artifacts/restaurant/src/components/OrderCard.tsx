@@ -59,6 +59,20 @@ export default function OrderCard({ order, actions, onAction }: OrderCardProps) 
 
       <p className="text-xs text-muted-foreground">{formatDate(order.createdAt)}</p>
 
+      {order.status === "preparing" && (
+        <div className="flex items-center gap-3 bg-orange-50 dark:bg-orange-950/20 rounded-xl p-3 mt-2 border border-orange-200 dark:border-orange-900/30">
+          <img 
+            src="https://cdn.dribbble.com/userupload/22718398/file/original-39ca1912fbd9b91163d9b68cb0adca68.gif" 
+            alt="Preparing..." 
+            className="w-16 h-16 rounded-lg object-cover"
+          />
+          <div>
+            <p className="font-bold text-orange-700 dark:text-orange-400 text-sm">Chef is preparing your food!</p>
+            <p className="text-xs text-orange-600/80 dark:text-orange-400/80 mt-0.5">Please wait while we cook it fresh.</p>
+          </div>
+        </div>
+      )}
+
       {actions && actions.length > 0 && (
         <div className="flex gap-2 flex-wrap">
           {actions.map((a) => (

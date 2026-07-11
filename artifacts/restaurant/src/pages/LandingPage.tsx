@@ -5,73 +5,68 @@ import { Star, MapPin, Phone, Clock, QrCode, Truck, UtensilsCrossed, Award } fro
 import { subscribeToMenu } from "@/lib/menuService";
 import { useSettings } from "@/context/SettingsContext";
 import MenuCard from "@/components/MenuCard";
+import ImmersiveHero from "@/components/ImmersiveHero";
+import ScrollBounceNavigator from "@/components/ScrollBounceNavigator";
 import type { MenuItem } from "@/types";
 
 const fadeUp = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 const stagger = { show: { transition: { staggerChildren: 0.1 } } };
 
 const testimonials = [
-  { name: "Priya Sharma", text: "Absolutely loved the biryani! The QR ordering is so convenient.", rating: 5 },
-  { name: "Rahul Gupta", text: "Fast delivery and the food arrived piping hot. Will order again!", rating: 5 },
-  { name: "Ananya Das", text: "The loyalty rewards program is a great touch. Amazing food quality.", rating: 5 },
+  { name: "Bikash Mohanty", text: "ଚଟପଟା ବାଇଟ୍ସ ର ଡିସ୍ ଗୁଡ଼ିକ ବହୁତ ଟେଷ୍ଟି ଆଉ ହାଇଜିନ୍ ମେଣ୍ଟେନ୍ ସବୁବେଳେ, ଲୋକେସନ୍ ଭଲ ଜାଗା ରେ ଅଛି, ତାଙ୍କ ଚିକେନ୍ ପକୋଡ଼ା ମତେ ବହୁତ ଭଲ ଲାଗିଲା।", rating: 5 },
+  { name: "Priyanka Sahoo", text: "ମୁଁ ତାଙ୍କ ବିରିୟାନୀ ଟ୍ରାଏ କରିଥିଲି, ସେ ଆଫୋର୍ଡେବଲ୍ ପ୍ରାଇସ୍ ରେ ବହୁତ ଟେଷ୍ଟି ବିରିୟାନୀ ଆଉ ଭଲ କ୍ୱାଣ୍ଟିଟି ର ରାଇସ୍ ପ୍ରୋଭାଇଡ୍ କରିଥିଲେ।", rating: 5 },
+  { name: "Ranjan Das", text: "ଲୟଲ୍ଟି ପ୍ରୋଗ୍ରାମ ଟା ବହୁତ ଭଲ। ଖାଦ୍ୟ ର କ୍ୱାଲିଟି ଏକଦମ ଟପ୍ କ୍ଲାସ!", rating: 5 },
 ];
 
 export default function LandingPage() {
   const { settings } = useSettings();
   const [featured, setFeatured] = useState<MenuItem[]>([]);
+  const [heroItems, setHeroItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
     const unsub = subscribeToMenu((items) => {
-      setFeatured(items.filter((i) => i.featured && i.available).slice(0, 6));
+      const available = items.filter((i) => i.available);
+      
+      // Featured items for the grid section
+      setFeatured(available.filter((i) => i.featured).slice(0, 6));
+
+      // Hero items: Ensure maximum variety by picking round-robin from categories
+      const categoryMap = new Map<string, MenuItem[]>();
+      available.forEach(item => {
+        if (!categoryMap.has(item.category)) categoryMap.set(item.category, []);
+        categoryMap.get(item.category)!.push(item);
+      });
+
+      const selectedHeroItems: MenuItem[] = [];
+      let round = 0;
+      const categories = Array.from(categoryMap.keys());
+      
+      while (selectedHeroItems.length < 8 && categories.length > 0) {
+        let addedInRound = false;
+        for (const cat of categories) {
+          const catItems = categoryMap.get(cat)!;
+          // Prefer featured items if available for this round
+          catItems.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+          
+          if (round < catItems.length) {
+            selectedHeroItems.push(catItems[round]);
+            addedInRound = true;
+            if (selectedHeroItems.length >= 8) break;
+          }
+        }
+        if (!addedInRound) break; // no more items left
+        round++;
+      }
+      
+      setHeroItems(selectedHeroItems);
     });
     return unsub;
   }, []);
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-amber-950 via-amber-900 to-orange-900 text-white">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200')] bg-cover bg-center opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate="show"
-          className="relative z-10 text-center px-6 max-w-3xl mx-auto"
-        >
-          <motion.p variants={fadeUp} className="text-amber-300 text-sm font-semibold uppercase tracking-widest mb-4">
-            Welcome to
-          </motion.p>
-          <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-extrabold mb-4 leading-tight">
-            {settings.name || "Our Restaurant"}
-          </motion.h1>
-          <motion.p variants={fadeUp} className="text-xl text-white/80 mb-8">
-            {settings.tagline || "Taste the Tradition"}
-          </motion.p>
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/menu"
-              className="bg-amber-500 hover:bg-amber-400 text-black font-bold px-8 py-4 rounded-full text-lg transition-all shadow-lg hover:shadow-amber-500/40 hover:scale-105"
-            >
-              Order Now
-            </Link>
-            <Link
-              href="/menu"
-              className="border-2 border-white/40 hover:border-white text-white font-bold px-8 py-4 rounded-full text-lg transition-all hover:bg-white/10"
-            >
-              View Menu
-            </Link>
-          </motion.div>
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 2.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 text-sm flex flex-col items-center gap-1"
-        >
-          <span>Scroll</span>
-          <div className="w-0.5 h-6 bg-white/40 rounded-full" />
-        </motion.div>
-      </section>
+      {/* 3D Immersive Hero passing the highly varied menu items */}
+      <ImmersiveHero items={heroItems} />
 
       {/* Features */}
       <section className="py-16 bg-background">
@@ -83,7 +78,7 @@ export default function LandingPage() {
           >
             {[
               { icon: QrCode, title: "QR Menu Ordering", desc: "Scan the table QR and order instantly — no app needed.", color: "text-amber-500" },
-              { icon: Truck, title: "Home Delivery", desc: "Fresh food delivered to your doorstep within 45 minutes.", color: "text-orange-500" },
+              { icon: Truck, title: "Home Delivery", desc: "Fresh food delivered quickly depending on your precise location.", color: "text-orange-500" },
               { icon: Award, title: "Loyalty Rewards", desc: "Earn stamps with every order. Unlock a free meal every 10 orders!", color: "text-emerald-500" },
             ].map((f) => (
               <motion.div key={f.title} variants={fadeUp} className="text-center p-6 rounded-2xl bg-card border border-border hover:shadow-lg transition-shadow">
@@ -105,12 +100,18 @@ export default function LandingPage() {
               <h2 className="text-4xl font-extrabold text-foreground">Featured Dishes</h2>
             </motion.div>
             <motion.div
-              initial="hidden" whileInView="show" viewport={{ once: true }}
+              initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }}
               variants={stagger}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 perspective-[1000px]"
             >
-              {featured.map((item) => (
-                <motion.div key={item.id} variants={fadeUp}>
+              {featured.map((item, index) => (
+                <motion.div 
+                  key={item.id} 
+                  initial={{ opacity: 0, y: 100, rotateX: -30, scale: 0.9 }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
+                  transition={{ duration: 0.8, delay: index * 0.1, type: "spring", bounce: 0.4 }}
+                  viewport={{ once: true }}
+                >
                   <MenuCard item={item} />
                 </motion.div>
               ))}
@@ -233,6 +234,9 @@ export default function LandingPage() {
         </div>
         <p>© {new Date().getFullYear()} All rights reserved.</p>
       </footer>
+
+      {/* Bouncy scroll to Menu */}
+      <ScrollBounceNavigator target="/menu" text="Scroll more to go to menu section 👇" />
     </div>
   );
 }

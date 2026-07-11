@@ -2,8 +2,20 @@ import type { MenuItem } from "@/types";
 import { addItem, deleteItem, getList, nowIso, sortByField, subscribeList, updateItem } from "@/lib/rtdb";
 import { OFFLINE_MENU_ITEMS } from "@/lib/offlineMenu";
 
+let cachedMenu: MenuItem[] | null = null;
+
 export function subscribeToMenu(cb: (items: MenuItem[]) => void) {
-  return subscribeList<MenuItem>("menu", (items) => cb(sortByField(items, "category")));
+  // If we already have the menu cached in memory, immediately return it to the UI
+  // so the user doesn't see a loading screen on page transitions.
+  if (cachedMenu) {
+    cb(cachedMenu);
+  }
+
+  return subscribeList<MenuItem>("menu", (items) => {
+    const sorted = sortByField(items, "category");
+    cachedMenu = sorted;
+    cb(sorted);
+  });
 }
 
 export async function getMenu(): Promise<MenuItem[]> {
